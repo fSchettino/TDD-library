@@ -9,6 +9,5 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-/.idea
-.idea/TDD-library.iml
+.idea/
 .idea/workspace.xml
