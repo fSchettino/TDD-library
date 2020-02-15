@@ -6,22 +6,22 @@ use App\Book;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class BookReservationTest extends TestCase
+class BookManagementTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
     public function a_book_can_be_added_to_the_library()
     {
-        $this->withoutExceptionHandling();
-
         $response = $this->post('/books', [
             'title' => 'Test book title',
             'author' => 'Test author name'
         ]);
 
-        $response->assertOk();
+        $book = Book::first();
+
         $this->assertCount(1, Book::all());
+        $response->assertRedirect($book->path());
     }
 
     /** @test */
@@ -49,8 +49,6 @@ class BookReservationTest extends TestCase
     /** @test */
     public function a_book_can_be_updated()
     {
-        $this->withoutExceptionHandling();
-
         // First: insert a record
         $this->post('/books', [
             'title' => 'Test book title',
@@ -60,12 +58,33 @@ class BookReservationTest extends TestCase
         $book = Book::first();
 
         // Second: update inserted record
-        $this->put('/books/' . $book->id, [
+        $response = $this->put('/books/' . $book->id, [
             'title' => 'Updated test book title',
             'author' => 'Updated test author name'
         ]);
 
         $this->assertEquals('Updated test book title', Book::first()->title);
         $this->assertEquals('Updated test author name', Book::first()->author);
+
+        // Fresh method reload umdated $book record from database
+        $response->assertRedirect($book->fresh()->path());
+    }
+
+    /** @test */
+    public function a_book_can_be_deleted()
+    {
+        // First: insert a record
+        $this->post('/books', [
+            'title' => 'Test book title',
+            'author' => 'Test author name'
+        ]);
+
+        $book = Book::first();
+        $this->assertCount(1, Book::all());
+
+        // Second: update inserted record
+        $response = $this->delete('/books/' . $book->id);
+        $this->assertCount(0, Book::all());
+        $response->assertRedirect('/books');
     }
 }
