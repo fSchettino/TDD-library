@@ -58,7 +58,7 @@ class BookManagementTest extends TestCase
         $book = Book::first();
 
         // Second: update inserted record
-        $response = $this->put('/books/' . $book->id, [
+        $response = $this->put($book->path(), [
             'title' => 'Updated test book title',
             'author' => 'Updated test author name'
         ]);
@@ -66,7 +66,7 @@ class BookManagementTest extends TestCase
         $this->assertEquals('Updated test book title', Book::first()->title);
         $this->assertEquals('Updated test author name', Book::first()->author);
 
-        // Fresh method reload umdated $book record from database
+        // Fresh method reload updated $book record from database
         $response->assertRedirect($book->fresh()->path());
     }
 
@@ -83,7 +83,7 @@ class BookManagementTest extends TestCase
         $this->assertCount(1, Book::all());
 
         // Second: update inserted record
-        $response = $this->delete('/books/' . $book->id);
+        $response = $this->delete($book->path());
         $this->assertCount(0, Book::all());
         $response->assertRedirect('/books');
     }
