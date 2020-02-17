@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Author;
 use App\Book;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
