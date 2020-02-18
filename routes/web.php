@@ -18,6 +18,7 @@ Route::delete('/books/{book}-{slug}', 'BooksController@destroy');
 Route::post('/checkout/{book}', 'CheckoutBookController@store');
 Route::post('/checkin/{book}', 'CheckinBookController@store');
 
+Route::get('/authors/create', 'AuthorsController@create');
 Route::post('/authors', 'AuthorsController@store');
 
 Auth::routes();
